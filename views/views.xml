@@ -1,0 +1,1361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard Form View -->
+    <record id="view_enquiry_performance_wizard_form" model="ir.ui.view">
+        <field name="name">enquiry.performance.wizard.form</field>
+        <field name="model">enquiry.performance.wizard</field>
+        <field name="arch" type="xml">
+
+            <form>
+                <group>
+                    <group>
+                        <field name="year"/>
+                        <field name="filter_by" widget="radio" options="{'horizontal': true}"/>
+                        <field name="user_id"
+                               options="{'no_edit': True, 'no_create': True ,'no_open': True,'no_quick_create':True}"
+                               attrs="{'invisible': [('filter_by', '=', 'back_office_user')]}"/>
+                        <field name="back_office_user_id"
+                               options="{'no_edit': True, 'no_create': True ,'no_open': True,'no_quick_create':True}"
+                               attrs="{'invisible': [('filter_by', '=', 'user')]}"/>
+                        <field name="report_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="quarter"
+                               attrs="{'invisible': ['|', ('report_type', '=', 'custom'), ('report_type', '=', 'monthly')]}"/>
+                        <field name="month"
+                               attrs="{'invisible': ['|', ('report_type', '=', 'quarterly'), ('report_type', '=', 'custom')]}"/>
+                        <field name="date_from"
+                               attrs="{'invisible': ['|',('report_type', '=', 'quarterly'), ('report_type', '=', 'monthly')]}"/>
+                        <field name="date_to"
+                               attrs="{'invisible': ['|',('report_type', '=', 'quarterly'), ('report_type', '=', 'monthly')]}"/>
+                        <field name="user_ids" invisible="1"/>
+                        <field name="back_office_user_ids" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="branch_id" domain="[('company_id', '=', company_id)]"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate Report" name="action_generate_report" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_enquiry_performance_analysis_form" model="ir.ui.view">
+        <field name="name">enquiry.performance.analysis.form</field>
+        <field name="model">enquiry.performance.analysis</field>
+        <field name="arch" type="xml">
+            <form string="Enquiry Performance Analysis">
+                <sheet>
+
+                    <!-- Basic Information -->
+                    <group>
+                        <h1>
+
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <group>
+                            <field name="date_from" readonly="1"/>
+                            <field name="date_to" readonly="1"/>
+
+                        </group>
+                        <group>
+                            <field name="company_id" readonly="1"/>
+                            <field name="branch_id" readonly="1" attrs="{'invisible': [('branch_id', '=', False)]}"/>
+
+                        </group>
+                    </group>
+
+                    <!-- Notebook for Detailed Metrics -->
+                    <notebook>
+                        <!-- Performance Metrics Tab -->
+                        <page string="Performance Metrics">
+                            <group string="Performance Metrics">
+                                <group>
+                                    <field name="total_quotation_amount"/>
+                                    <field name="total_sales_amount"/>
+                                    <field name="total_invoiced"/>
+                                    <field name="total_invoice_profit"/>
+<!--                                    <field name="new_customers_count"/>-->
+
+                                    <!-- Additional Performance Metrics -->
+                                    <field name="total_enquiries"/>
+                                    <field name="approved_enquiries"/>
+                                    <field name="cancelled_enquiries"/>
+                                    <field name="sales_target" readonly="1"/>
+                                </group>
+                                <group>
+                                     <!-- Purchase and RFQ Metrics -->
+                                    <field name="total_purchase_amount"/>
+                                    <field name="total_rfq_amount"/>
+                                    <field name="total_bills"/>
+<!--                                    <field name="new_products_count"/>-->
+
+                                    <field name="fastest_quot_to_so_time"/>
+                                    <field name="fastest_so_to_invoice_time"/>
+
+
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- System Values Tab -->
+                        <page string="System Values">
+                            <group string="System Values">
+                                <group>
+                                    <field name="total_quotation_amount_all"/>
+                                    <field name="total_sales_amount_all"/>
+                                    <field name="total_invoiced_all"/>
+                                    <field name="profit_all"/>
+<!--                                    <field name="customer_count_all"/>-->
+
+                                    <field name="total_enquiries_all"/>
+                                    <field name="approved_enquiries_all"/>
+                                    <field name="cancelled_enquiries_all"/>
+                                </group>
+                                <group>
+                                     <field name="total_purchase_amount_all"/>
+                                    <field name="total_rfq_amount_all"/>
+                                    <field name="total_bills_all"/>
+<!--                                    <field name="new_product_sales_all"/>-->
+
+                                    <field name="avg_approval_time_all"/>
+                                    <field name="avg_invoice_time_all"/>
+
+                                    <!-- Additional System Values -->
+
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Comparison Tab -->
+                        <page string="Comparison">
+                            <group string="Comparison Metrics" colspan="4">
+                                <table class="o_list_table"
+                                       style="width: 100%; border-collapse: separate; border-spacing: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 10px; text-align: left; min-width: 200px;">Type</th>
+                                            <th style="padding: 10px; text-align: left; min-width: 200px;">Performance
+                                                Metric
+                                            </th>
+                                            <th style="padding: 10px; text-align: right; min-width: 150px;">System
+                                                Value
+                                            </th>
+                                            <th style="padding: 10px; text-align: right; min-width: 100px;">Percentage
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Enquiry Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Enquiries</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_enquiries"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_enquiries_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Enquiries Cancelled</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="cancelled_enquiries"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="cancelled_enquiries_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_cancelled_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Enquiries Approved</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="approved_enquiries"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="approved_enquiries_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_approved_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <!-- Quotation Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Quotations</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_quotation_amount"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_quotation_amount_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="quotation_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Sales Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Sales</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_sales_amount"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_sales_amount_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="sales_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Invoice Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Invoices</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_invoiced"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_invoiced_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="invoice_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Purchase Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Purchase Orders(In Company Currency)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_purchase_amount"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_purchase_amount_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="purchase_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- RFQ Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>RFQs(In Company Currency)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_rfq_amount"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_rfq_amount_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="rfq_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Bills Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Bills</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_bills"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_bills_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="bill_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                         <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Min Time to SO(Hours)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="fastest_quot_to_so_time"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="avg_approval_time_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="approval_time_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Min Time to SO to Invoice(Hours)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="fastest_so_to_invoice_time"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="avg_invoice_time_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="invoice_time_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- New Customers Metrics -->
+<!--                                        <tr>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <strong>New Customers</strong>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <field name="new_customers_count"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="customer_count_all"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="customer_percentage" readonly="1"/>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+
+                                        <!-- New Products Metrics -->
+<!--                                        <tr>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <strong>New Products</strong>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <field name="new_products_count"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="new_product_sales_all"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="new_product_percentage" readonly="1"/>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+
+                                        <!-- Sales Target Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Sales Target (w.r.t Total Sales)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="sales_target"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_sales_amount"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="sales_target_percentage" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </group>
+                        </page>
+                        <page string="Scores">
+                            <group>
+                                <field name="score_desc"/>
+
+                            </group>
+                            <group string="Scores">
+                                <table class="o_list_table"
+                                       style="width: 100%; border-collapse: separate; border-spacing: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th style="padding: 10px; text-align: left; min-width: 200px;">Type</th>
+                                            <th style="padding: 10px; text-align: left; min-width: 200px;">Performance
+                                                Metric
+                                            </th>
+                                            <th style="padding: 10px; text-align: right; min-width: 150px;">System
+                                                Value
+                                            </th>
+                                            <th style="padding: 10px; text-align: right; min-width: 100px;">Percentage
+                                            </th>
+                                            <th style="padding: 10px; text-align: right; min-width: 100px;">Score
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Enquiry Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Enquiries</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_enquiries"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_enquiries_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Enquiries Cancelled</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="cancelled_enquiries"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="cancelled_enquiries_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_cancelled_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_cancelled_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Enquiries Approved</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="approved_enquiries"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="approved_enquiries_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_approved_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="enquiry_approved_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Quotation Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Quotations</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_quotations"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_quotations_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="quotation_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="quotation_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Sales Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Sales</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_sales"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_sales_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="sales_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="sales_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Invoice Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Invoices</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_invoiced"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_invoiced_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="invoice_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="invoice_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Purchase Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Purchase Orders</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_purchase"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_purchase_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="purchase_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="purchase_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- RFQ Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>RFQs</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_rfq"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_rfq_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="rfq_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="rfq_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Bills Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Bills</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="total_bills"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_bills_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="bill_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="bill_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Min Time to SO(Hours)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="fastest_quot_to_so_time"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="avg_approval_time_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="approval_time_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="approval_time_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Min Time to SO to Invoice(Hours)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="fastest_so_to_invoice_time"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="avg_invoice_time_all"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="invoice_time_percentage" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="invoice_time_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+<!--                                        &lt;!&ndash; New Customers Metrics &ndash;&gt;-->
+<!--                                        <tr>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <strong>New Customers</strong>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <field name="new_customers_count"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="customer_count_all"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="customer_percentage" readonly="1"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="customer_score" readonly="1"/>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+
+<!--                                        &lt;!&ndash; New Products Metrics &ndash;&gt;-->
+<!--                                        <tr>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <strong>New Products</strong>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px;">-->
+<!--                                                <field name="new_products_count"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="new_product_sales_all"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="new_product_percentage" readonly="1"/>-->
+<!--                                            </td>-->
+<!--                                            <td style="padding: 10px; text-align: right;">-->
+<!--                                                <field name="new_product_score" readonly="1"/>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+
+                                        <!-- Sales Target Metrics -->
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <strong>Sales Target(w.r.t Total Sales)</strong>
+                                            </td>
+                                            <td style="padding: 10px;">
+                                                <field name="sales_target"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="total_sales"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="sales_target" readonly="1"/>
+                                            </td>
+                                            <td style="padding: 10px; text-align: right;">
+                                                <field name="sales_target_score" readonly="1"/>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </group>
+                        </page>
+
+                        <!-- Score Configuration Tab -->
+                        <page string="Score Configuration">
+                            <group>
+                                <field name="score_config_ids" mode="tree,form" readonly="1">
+                                    <tree>
+                                        <field name="min_percentage" style="width: 100px"/>
+                                        <field name="max_percentage" style="width: 100px"/>
+                                        <field name="points" style="width: 80px"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+
+                        <!-- Achievements Tab -->
+                        <page string="Achievements">
+                            <group string="Achievement Details">
+                                <group>
+                                    <field name="medal" readonly="1"/>
+                                    <field name="badge_color" readonly="1"/>
+                                    <field name="total_score"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!--Kanban View-->
+    <record id="view_enquiry_performance_kanban" model="ir.ui.view">
+        <field name="name">enquiry.performance.analysis.kanban</field>
+        <field name="model">enquiry.performance.analysis</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="image"/>
+                <field name="total_enquiries"/>
+                <field name="sales_target"/>
+
+
+                <field name="total_enquiries"/>
+                <field name="total_quotation_amount"/>
+                <field name="total_sales_amount"/>
+                <field name="total_sales"/>
+                <field name="sales_target"/>
+                <field name="total_invoiced"/>
+                <field name="total_quotations"/>
+                <field name="total_purchase"/>
+                <field name="total_rfq"/>
+                <field name="largest_value"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban"
+                             style="min-height: 238px; max-height: 238px;min-width: 364px; max-width: 364px">
+                            <div style="display: flex; flex-direction: column; height: 100%;">
+                                <!-- Top section with image and name -->
+                                <div style="display: flex; height: 170px;">
+                                    <!-- Image section with fallback -->
+                                    <div t-attf-class="o_kanban_image_fill_left #{!record.image.raw_value ? 'bg-light' : ''}"
+                                         t-attf-style="#{record.image.raw_value ? 'background-image: url(' + kanban_image('enquiry.performance.analysis', 'image', record.id.raw_value) + ');' : ''}
+                                     min-height: 170px; max-height: 170px; min-width: 90px; max-width: 90px;
+                                     background-size: cover;
+                                     background-position: center;
+                                     background-repeat: no-repeat;">
+                                        <t t-if="!record.image.raw_value">
+                                            <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #666;">
+                                                <i class="fa fa-user" style="font-size: 48px;"/>
+                                            </div>
+                                        </t>
+                                    </div>
+
+                                    <!-- Name and graph section -->
+                                    <div class="oe_kanban_details" style="flex: 1; padding: 8px;">
+                                        <strong class="o_kanban_record_title mb-2">
+                                            <field name="name"/>
+                                        </strong>
+                                        <!-- SVG Graph placeholder for performance -->
+                                        <div style="height: 140px; width: 210px;">
+                                            <svg width="110%" height="100%" viewBox="-10 0 145 60"
+                                                 preserveAspectRatio="none">
+                                                <!-- Add SVG styles for hover effects -->
+                                                <defs>
+                                                    <style>
+                                                        .data-point {
+                                                        transition: r 0.2s ease-in-out, fill 0.2s ease-in-out;
+                                                        cursor: pointer;
+                                                        }
+                                                        .data-point:hover {
+                                                        r: 3;
+                                                        fill: #4a4996;
+                                                        }
+                                                        .value-line {
+                                                        transition: stroke-width 0.2s ease-in-out, stroke 0.2s
+                                                        ease-in-out;
+                                                        }
+                                                        .value-line:hover {
+                                                        stroke-width: 3;
+                                                        stroke: #4a4996;
+                                                        }
+                                                        .x-label, .y-label {
+                                                        cursor: pointer;
+                                                        transition: font-size 0.2s ease-in-out;
+                                                        }
+                                                        .x-label:hover, .y-label:hover {
+                                                        font-size: 5px;
+                                                        fill: #4a4996;
+                                                        }
+                                                        .tooltip-text {
+                                                        opacity: 0;
+                                                        font-size: 5px;
+                                                        pointer-events: none;
+                                                        }
+                                                        .data-point:hover + .tooltip-text {
+                                                        opacity: 1;
+                                                        }
+                                                        .data-bar {
+                                                        transition: fill 0.2s ease-in-out;
+                                                        }
+                                                        .data-bar:hover {
+                                                        fill-opacity: 0.8;
+                                                        }
+                                                    </style>
+                                                </defs>
+
+                                                <!-- Background Grid -->
+                                                <line x1="10" y1="10" x2="135" y2="10" stroke="#f0f0f0"
+                                                      stroke-width="0.5"/>
+                                                <line x1="10" y1="18" x2="135" y2="18" stroke="#f0f0f0"
+                                                      stroke-width="0.5"/>
+                                                <line x1="10" y1="26" x2="135" y2="26" stroke="#f0f0f0"
+                                                      stroke-width="0.5"/>
+                                                <line x1="10" y1="34" x2="135" y2="34" stroke="#f0f0f0"
+                                                      stroke-width="0.5"/>
+                                                <line x1="10" y1="42" x2="135" y2="42" stroke="#f0f0f0"
+                                                      stroke-width="0.5"/>
+                                                <line x1="10" y1="50" x2="135" y2="50" stroke="#f0f0f0"
+                                                      stroke-width="0.5"/>
+
+                                                <!-- Y-axis -->
+                                                <line x1="10" y1="10" x2="10" y2="50" stroke="black" stroke-width="1"/>
+
+                                                <!-- Y-axis ticks -->
+                                                <line x1="8" y1="10" x2="12" y2="10" stroke="black" stroke-width="1"/>
+                                                <line x1="8" y1="18" x2="12" y2="18" stroke="black" stroke-width="1"/>
+                                                <line x1="8" y1="26" x2="12" y2="26" stroke="black" stroke-width="1"/>
+                                                <line x1="8" y1="34" x2="12" y2="34" stroke="black" stroke-width="1"/>
+                                                <line x1="8" y1="42" x2="12" y2="42" stroke="black" stroke-width="1"/>
+                                                <line x1="8" y1="50" x2="12" y2="50" stroke="black" stroke-width="1"/>
+
+                                                <!-- Y-axis labels -->
+                                                <text x="5" y="12" font-size="3" class="y-label" text-anchor="end"
+                                                      t-esc="((record.largest_value.raw_value || 0) / 1000).toFixed(2) + 'k'"></text>
+                                                <text x="5" y="20" font-size="3" class="y-label" text-anchor="end"
+                                                      t-esc="(((record.largest_value.raw_value || 0) * 0.8) / 1000).toFixed(2) + 'k'"></text>
+                                                <text x="5" y="28" font-size="3" class="y-label" text-anchor="end"
+                                                      t-esc="(((record.largest_value.raw_value || 0) * 0.6) / 1000).toFixed(2) + 'k'"></text>
+                                                <text x="5" y="36" font-size="3" class="y-label" text-anchor="end"
+                                                      t-esc="(((record.largest_value.raw_value || 0) * 0.4) / 1000).toFixed(2) + 'k'"></text>
+                                                <text x="5" y="44" font-size="3" class="y-label" text-anchor="end"
+                                                      t-esc="(((record.largest_value.raw_value || 0) * 0.2) / 1000).toFixed(2) + 'k'"></text>
+                                                <text x="5" y="52" font-size="3" class="y-label" text-anchor="end">0
+                                                </text>
+
+                                                <!-- X-axis -->
+                                                <line x1="10" y1="50" x2="140" y2="50" stroke="black" stroke-width="1"/>
+
+                                                <!-- X-axis ticks -->
+                                                <line x1="30" y1="48" x2="30" y2="52" stroke="black" stroke-width="1"/>
+                                                <line x1="55" y1="48" x2="55" y2="52" stroke="black" stroke-width="1"/>
+                                                <line x1="80" y1="48" x2="80" y2="52" stroke="black" stroke-width="1"/>
+                                                <line x1="105" y1="48" x2="105" y2="52" stroke="black"
+                                                      stroke-width="1"/>
+                                                <line x1="130" y1="48" x2="130" y2="52" stroke="black"
+                                                      stroke-width="1"/>
+
+                                                <!-- X-axis labels -->
+                                                <text x="30" y="55" class="x-label" font-size="2.5"
+                                                      text-anchor="middle">Sales
+                                                </text>
+                                                <text x="55" y="55" class="x-label" font-size="2.5"
+                                                      text-anchor="middle">Total Quotation
+                                                </text>
+                                                <text x="80" y="55" class="x-label" font-size="2.5"
+                                                      text-anchor="middle">Sales Target
+                                                </text>
+                                                <text x="105" y="55" class="x-label" font-size="2.5"
+                                                      text-anchor="middle">Total Invoiced
+                                                </text>
+                                                <text x="130" y="55" class="x-label" font-size="2.5"
+                                                      text-anchor="middle">Total Profit
+                                                </text>
+
+
+                                                <!-- Dynamic Value Line -->
+                                                <path class="value-line"
+                                                      t-att-d="'M30,' + (50 - Math.min((record.total_sales_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)) +
+               ' L55,' + (50 - Math.min((record.total_quotation_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)) +
+               ' L80,' + (50 - Math.min((record.sales_target.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)) +
+               ' L105,' + (50 - Math.min((record.total_invoiced.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)) +
+               ' L130,' + (50 - Math.min((record.total_invoice_profit.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40))"
+                                                      fill="none" stroke="#7C7BAD" stroke-width="2"/>
+
+
+                                                <!-- Data Points and Tooltips -->
+                                                <g>
+                                                    <!-- Total Enquiries -->
+                                                    <circle class="data-point"
+                                                            t-att-cx="30"
+                                                            t-att-cy="50 - Math.min((record.total_sales_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                            r="2"
+                                                            fill="#7C7BAD"/>
+                                                    <text class="tooltip-text"
+                                                          t-att-x="30"
+                                                          t-att-y="45 - Math.min((record.total_sales_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          text-anchor="middle">
+                                                        <tspan t-esc="'Enquiries: ' + (record.total_sales_amount.raw_value or 0)"/>
+                                                    </text>
+
+
+                                                    <!-- Total Quotation -->
+                                                    <circle class="data-point"
+                                                            t-att-cx="55"
+                                                            t-att-cy="50 - Math.min((record.total_quotation_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                            r="2"
+                                                            fill="#7C7BAD"/>
+                                                    <text class="tooltip-text"
+                                                          t-att-x="55"
+                                                          t-att-y="45 - Math.min((record.total_quotation_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          text-anchor="middle">
+                                                        <tspan t-esc="'Quotation: ' + (record.total_quotation_amount.raw_value or 0)"/>
+                                                    </text>
+
+                                                    <!-- Sales Target -->
+                                                    <circle class="data-point"
+                                                            t-att-cx="80"
+                                                            t-att-cy="50 - Math.min((record.sales_target.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                            r="2"
+                                                            fill="#7C7BAD"/>
+                                                    <text class="tooltip-text"
+                                                          t-att-x="80"
+                                                          t-att-y="45 - Math.min((record.sales_target.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          text-anchor="middle">
+                                                        <tspan t-esc="'Sales Target: ' + (record.sales_target.raw_value or 0)"/>
+                                                    </text>
+
+                                                    <!-- Total Invoiced -->
+                                                    <circle class="data-point"
+                                                            t-att-cx="105"
+                                                            t-att-cy="50 - Math.min((record.total_invoiced.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                            r="2"
+                                                            fill="#7C7BAD"/>
+                                                    <text class="tooltip-text"
+                                                          t-att-x="105"
+                                                          t-att-y="45 - Math.min((record.total_invoiced.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          text-anchor="middle">
+                                                        <tspan t-esc="'Total Invoiced: ' + (record.total_invoiced.raw_value or 0)"/>
+                                                    </text>
+
+                                                    <!-- Total Profit -->
+                                                    <circle class="data-point"
+                                                            t-att-cx="130"
+                                                            t-att-cy="50 - Math.min((record.total_invoice_profit.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                            r="2"
+                                                            fill="#7C7BAD"/>
+                                                    <text class="tooltip-text"
+                                                          t-att-x="130"
+                                                          t-att-y="45 - Math.min((record.total_invoice_profit.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          text-anchor="middle">
+                                                        <tspan t-esc="'Total Profit: ' + (record.total_invoice_profit.raw_value or 0)"/>
+                                                    </text>
+
+                                                    <!-- Total Enquiries bar -->
+                                                    <!-- Total Enquiries bar -->
+                                                    <rect class="data-bar"
+                                                          x="20"
+                                                          t-att-y="50 - Math.min((record.total_sales_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          width="10"
+                                                          t-att-height="Math.min((record.total_sales_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          fill="#4A90E2"/>
+
+                                                    <!-- Total Quotation bar -->
+                                                    <rect class="data-bar"
+                                                          x="45"
+                                                          t-att-y="50 - Math.min((record.total_quotation_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          width="10"
+                                                          t-att-height="Math.min((record.total_quotation_amount.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          fill="#50E3C2"/>
+
+                                                    <!-- Sales Target bar -->
+                                                    <!-- Sales Target bar -->
+                                                    <rect class="data-bar"
+                                                          x="70"
+                                                          t-att-y="50 - Math.min((record.sales_target.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          width="10"
+                                                          t-att-height="Math.min((record.sales_target.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          fill="#F5A623"/>
+
+                                                    <!-- Total Invoiced bar -->
+                                                    <rect class="data-bar"
+                                                          x="95"
+                                                          t-att-y="50 - Math.min((record.total_invoiced.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          width="10"
+                                                          t-att-height="Math.min((record.total_invoiced.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          fill="#E74C3C"/>
+
+                                                    <!-- Total Profit bar -->
+                                                    <rect class="data-bar"
+                                                          x="120"
+                                                          t-att-y="50 - Math.min((record.total_invoice_profit.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          width="10"
+                                                          t-att-height="Math.min((record.total_invoice_profit.raw_value or 0) * 40 / (record.largest_value.raw_value or 1), 40)"
+                                                          fill="#8E44AD"/>a
+
+                                                </g>
+                                            </svg>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bottom section for all buttons in one row -->
+                                <div style="padding-left: 10px; background-color: #f8f9fa; margin-top: 1px; flex-grow: 1;">
+                                    <div style="display: flex; gap: 0px; justify-content: space-between; flex-wrap: nowrap;">
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_total_enquiries"
+                                                type="object"
+                                                t-attf-title="Total Enquiries: #{record.total_enquiries.value}">
+                                            <i class="fa fa-list" role="img" aria-label="Enquiries"/>
+                                            <field name="total_enquiries" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_approved_enquiries"
+                                                type="object"
+                                                t-attf-title="Approved Enquiries: #{record.approved_enquiries.value}">
+                                            <i class="fa fa-check-circle" role="img" aria-label="Approved"/>
+                                            <field name="approved_enquiries" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_cancelled_enquiries"
+                                                type="object"
+                                                t-attf-title="Cancelled Enquiries: #{record.cancelled_enquiries.value}">
+                                            <i class="fa fa-times-circle" role="img" aria-label="Cancelled"/>
+                                            <field name="cancelled_enquiries" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_bid_close_enquiries"
+                                                type="object"
+                                                t-attf-title="Bid Close Enquiries: #{record.filtered_enquiry_id_count.value}">
+                                            <i class="fa fa-flag-checkered" role="img" aria-label="Cancelled"/>
+                                            <field name="filtered_enquiry_id_count" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_quotations"
+                                                type="object"
+                                                t-attf-title="Total Quotation value: #{record.total_quotation_amount.value} (#{record.total_quotations.value})">
+                                            <i class="fa fa-list" role="img" aria-label="Quotations "/>
+                                            <field name="total_quotation_amount" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_sales_orders"
+                                                type="object"
+                                                t-attf-title="Total Sales amount: #{record.total_sales_amount.value} (#{record.total_sales.value})">
+                                            <i class="fa fa-paper-plane" role="img" aria-label="Sales Amount"/>
+                                            <field name="total_sales_amount" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_invoices"
+                                                type="object"
+                                                t-attf-title="Total Invoiced Amount: #{record.total_invoiced.value}">
+                                            <i class="fa fa-pencil" role="img" aria-label="Total Invoiced"/>
+                                            <field name="total_invoiced" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_deliveries"
+                                                type="object"
+                                                t-attf-title="Deliveries: #{record.total_deliveries.value}">
+                                            <i class="fa fa-truck" role="img"
+                                               aria-label="Deliveries"/>
+                                            <field name="total_deliveries" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+                                        </div>
+                                    <div style="display: flex; gap: 0px; justify-content: space-between; flex-wrap: nowrap;">
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_profit_level"
+                                                type="object"
+                                                t-attf-title="Profit : #{record.total_invoice_profit.value}">
+                                            <i class="fa fa-line-chart" role="img" aria-label="Profit"/>
+                                            <field name="total_invoice_profit" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_fastest_quoted_so"
+                                                type="object"
+                                                t-attf-title="Min Time for SO: #{record.fastest_quot_to_so_time.value} hours">
+                                            <i class="fa fa-file-o" role="img" aria-label="Min Time for SO"/>
+                                            <field name="fastest_quot_to_so_time" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_fastest_invoiced_so"
+                                                type="object"
+                                                t-attf-title="Min Time for Invoice: #{record.fastest_so_to_invoice_time.value} hours">
+                                            <i class="fa fa-file-text" role="img" aria-label="Shortest Invoice"/>
+                                            <field name="fastest_so_to_invoice_time" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+
+<!--                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"-->
+<!--                                                name="action_view_new_customers"-->
+<!--                                                type="object"-->
+<!--                                                t-attf-title="Customers: #{record.new_customers_count.value}">-->
+<!--                                            <i class="fa fa-shopping-cart" role="img" aria-label="New Customers"/>-->
+<!--                                            <field name="new_customers_count" widget="statinfo" nolabel="1"-->
+<!--                                                   invisible="1"/>-->
+<!--                                        </button>-->
+<!--                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"-->
+<!--                                                name="action_view_new_products"-->
+<!--                                                type="object"-->
+<!--                                                t-attf-title="Products: #{record.new_products_count.value}">-->
+<!--                                            <i class="fa fa-file-text" role="img" aria-label="New Customers"/>-->
+<!--                                            <field name="new_products_count" widget="statinfo" nolabel="1"-->
+<!--                                                   invisible="1"/>-->
+<!--                                        </button>-->
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_purchase_quotations"
+                                                type="object"
+                                                t-attf-title="Total Purchase Quotation Value: #{record.total_rfq_amount.value}(#{record.total_rfq.value})">
+                                            <i class="fa fa-file-text-o" role="img"
+                                               aria-label="Purchase Quotations"/>
+                                            <field name="total_rfq_amount" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_purchase_orders"
+                                                type="object"
+                                                t-attf-title="Total Purchase Order Value: #{record.total_purchase_amount.value}(#{record.total_purchase.value})">
+                                            <i class="fa fa-shopping-cart" role="img" aria-label="Purchase Orders"/>
+                                            <field name="total_purchase_amount" widget="statinfo" nolabel="1"
+                                                   invisible="1"/>
+                                        </button>
+
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_purchase_invoices"
+                                                type="object"
+                                                t-attf-title="Total Purchase Invoice Value: #{record.total_bills.value}">
+                                            <i class="fa fa-book" role="img"
+                                               aria-label="Purchase Invoices"/>
+                                            <field name="total_bills" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_receipts"
+                                                type="object"
+                                                t-attf-title="Receipts: #{record.total_receipts.value}">
+                                            <i class="fa fa-inbox" role="img"
+                                               aria-label="Receipts"/>
+                                            <field name="total_receipts" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+
+                                        <button style="border: none; background: none; padding: 0; font-size: 11px; color: #666;"
+                                                name="action_view_score_details"
+                                                type="object"
+                                                t-attf-title="Rank: #{record.total_score.value}">
+                                            <i class="fa fa-star" role="img" aria-label="Total Score"/>
+                                            <field name="total_score" widget="statinfo" nolabel="1" invisible="1"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_enquiry_performance_analysis_tree" model="ir.ui.view">
+        <field name="name">enquiry.performance.analysis.tree</field>
+        <field name="model">enquiry.performance.analysis</field>
+        <field name="arch" type="xml">
+            <tree string="Enquiry Performance Analysis">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="total_enquiries" sum="Total Enquiries"/>
+                <field name="cancelled_enquiries" sum="Cancelled Enquiries"/>
+                <field name="total_quotations" sum="Total Quotations"/>
+                <field name="total_sales" sum="Total Sales Orders"/>
+                <field name="total_quotation_amount" sum="Total Quotation Amount"/>
+                <field name="total_sales_amount" sum="Total Sales Amount"/>
+                <field name="total_invoiced" sum="Total Invoiced Amount"/>
+                <field name="total_invoice_profit" sum="Total Invoice Profit"/>
+                <field name="total_purchase_amount"/>
+                <field name="total_rfq_amount"/>
+                <field name="medal"/>
+                <field name="achievement_level"/>
+                <field name="has_achievement" invisible="1"/>
+                <field name="total_score"/>
+                <button name="action_open_form_view"
+                        type="object"
+                        string="View"
+                        class="oe_highlight"
+                        icon="fa-external-link-alt"/>
+                <button name="%(action_user_performance_wizard)d"
+                        type="action"
+                        string="Set Achievement"
+                        class="oe_highlight"
+                        icon="fa-trophy"
+                        groups="enz_sale_more_details.group_enzaccounting_manager"
+                        attrs="{'invisible': [('has_achievement', '=', True)]}"/>
+                <button name="%(action_user_performance_wizard)d"
+                        type="action"
+                        string="Re-assign"
+                        class="oe_highlight"
+                        icon="fa-repeat"
+                        groups="enz_sale_more_details.group_enzaccounting_manager"
+                        attrs="{'invisible': [('has_achievement', '=', False)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_enquiry_performance_analysis_pivot" model="ir.ui.view">
+        <field name="name">enquiry.performance.analysis.pivot</field>
+        <field name="model">enquiry.performance.analysis</field>
+        <field name="arch" type="xml">
+            <pivot string="Enquiry Performance Analysis" sample="1">
+                <!-- Row Fields -->
+                <field name="user_id" type="row"/>
+
+
+                <!-- Measure Fields (Visible) -->
+                <field name="total_enquiries" type="measure"/>
+                <field name="approved_enquiries" type="measure"/>
+                <field name="cancelled_enquiries" type="measure"/>
+                <field name="total_quotations" type="measure" invisible="1"/>
+                <field name="total_quotation_amount" type="measure"/>
+                <field name="total_sales" type="measure" invisible="1"/>
+                <field name="total_sales_amount" type="measure"/>
+                <field name="total_invoiced" type="measure"/>
+                <field name="total_invoice_profit" type="measure"/>
+                <field name="new_customers_count" type="measure" invisible="1"/>
+                <field name="new_products_count" type="measure" invisible="1"/>
+                <field name="fastest_quot_to_so_time" type="measure"/>
+                <field name="fastest_so_to_invoice_time" type="measure"/>
+
+                <!-- Purchase and RFQ Measures -->
+                <field name="total_purchase" type="measure"/>
+                <field name="total_purchase_amount" type="measure"/>
+                <field name="total_rfq" type="measure"/>
+                <field name="total_rfq_amount" type="measure"/>
+                <field name="total_bills" type="measure"/>
+
+                <!-- Score Fields (Invisible) -->
+                <field name="enquiry_score" type="measure" invisible="1"/>
+                <field name="enquiry_cancelled_score" type="measure" invisible="1"/>
+                <field name="enquiry_approved_score" type="measure" invisible="1"/>
+                <field name="sales_score" type="measure" invisible="1"/>
+                <field name="invoice_score" type="measure" invisible="1"/>
+                <field name="profit_score" type="measure" invisible="1"/>
+                <field name="quotation_score" type="measure" invisible="1"/>
+                <field name="customer_score" type="measure" invisible="1"/>
+                <field name="approval_time_score" type="measure" invisible="1"/>
+                <field name="invoice_time_score" type="measure" invisible="1"/>
+                <field name="new_product_score" type="measure" invisible="1"/>
+                <field name="rfq_score" type="measure" invisible="1"/>
+                <field name="purchase_score" type="measure" invisible="1"/>
+                <field name="bill_score" type="measure" invisible="1"/>
+                <field name="total_score" type="measure" invisible="1"/>
+
+                <!-- Percentage Fields (Invisible) -->
+                <field name="enquiry_percentage" type="measure" invisible="1"/>
+                <field name="enquiry_cancelled_percentage" type="measure" invisible="1"/>
+                <field name="enquiry_approved_percentage" type="measure" invisible="1"/>
+                <field name="sales_percentage" type="measure" invisible="1"/>
+                <field name="invoice_percentage" type="measure" invisible="1"/>
+                <field name="profit_percentage" type="measure" invisible="1"/>
+                <field name="quotation_percentage" type="measure" invisible="1"/>
+                <field name="customer_percentage" type="measure" invisible="1"/>
+                <field name="approval_time_percentage" type="measure" invisible="1"/>
+                <field name="invoice_time_percentage" type="measure" invisible="1"/>
+                <field name="new_product_percentage" type="measure" invisible="1"/>
+                <field name="rfq_percentage" type="measure" invisible="1"/>
+                <field name="purchase_percentage" type="measure" invisible="1"/>
+                <field name="bill_percentage" type="measure" invisible="1"/>
+
+                <!-- System Values (Invisible) -->
+                <field name="total_enquiries_all" type="measure" invisible="1"/>
+                <field name="cancelled_enquiries_all" type="measure" invisible="1"/>
+                <field name="approved_enquiries_all" type="measure" invisible="1"/>
+                <field name="total_quotation_amount_all" type="measure" invisible="1"/>
+                <field name="total_quotations_all" type="measure" invisible="1"/>
+                <field name="total_sales_all" type="measure" invisible="1"/>
+                <field name="total_sales_amount_all" type="measure" invisible="1"/>
+                <field name="total_purchase_all" type="measure" invisible="1"/>
+                <field name="total_purchase_amount_all" type="measure" invisible="1"/>
+                <field name="total_rfq_all" type="measure" invisible="1"/>
+                <field name="total_rfq_amount_all" type="measure" invisible="1"/>
+                <field name="total_bills_all" type="measure" invisible="1"/>
+                <field name="total_invoiced_all" type="measure" invisible="1"/>
+                <field name="profit_all" type="measure" invisible="1"/>
+                <field name="customer_count_all" type="measure" invisible="1"/>
+                <field name="new_product_sales_all" type="measure" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+
+    <!-- Graph View -->
+    <record id="view_enquiry_performance_analysis_graph" model="ir.ui.view">
+        <field name="name">enquiry.performance.analysis.graph</field>
+        <field name="model">enquiry.performance.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="Enquiry Performance Analysis" type="bar" stacked="True">
+                <!-- Group by user to compare performance among users -->
+                <field name="user_id" type="row"/>
+                <!-- Group by date range to show trends over time -->
+                <field name="date_from" interval="month" type="col"/>
+
+                <!-- Metrics to be displayed as bars -->
+                <field name="total_enquiries" type="measure"/>
+                <field name="cancelled_enquiries" type="measure"/>
+                <field name="total_quotations" type="measure"/>
+                <field name="total_sales" type="measure"/>
+                <field name="total_quotation_amount" type="measure"/>
+                <field name="total_sales_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+    <record id="action_enquiry_performance_dashboard" model="ir.actions.act_window">
+        <field name="name">Enquiry Performance Dashboard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">enquiry.performance.analysis</field>
+        <field name="view_mode">kanban,tree,graph,pivot</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No enquiry performance data found
+            </p>
+            <p>
+                Create your first enquiry performance analysis to track enquiry handling metrics.
+            </p>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_enquiry_performance_wizard" model="ir.actions.act_window">
+        <field name="name">Enquiry Performance Analysis</field>
+        <field name="res_model">enquiry.performance.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_enquiry_performance"
+              name="Dashboard"
+              sequence="20"/>
+
+    <menuitem id="menu_enquiry_performance_wizard"
+              name="Enquiry Performance Report"
+              parent="enz_enquiry_analysis.menu_enquiry_performance"
+              action="action_enquiry_performance_wizard"
+              sequence="20"/>
+    <menuitem id="menu_enquiry_config"
+              name="Configurations"
+              parent="menu_enquiry_performance"
+              sequence="30"/>
+
+    <menuitem id="menu_enquiry_badge_conf_wizard_sales"
+              name="Enquiry Badge Configuration"
+              parent="enz_enquiry_analysis.menu_enquiry_config"
+              action="action_enquiry_badge_assignment_config"
+              sequence="30"/>
+
+    <menuitem id="menu_enquiry_score_wizard_sales"
+              name="Enquiry Score Configuration"
+              parent="enz_enquiry_analysis.menu_enquiry_config"
+              action="action_enquiry_range_config"
+              sequence="40"/>
+    <menuitem
+            id="menu_bid_closing_date_config"
+            name="Bid Closing Date"
+            parent="enz_enquiry_analysis.menu_enquiry_config"
+            action="bid_closing_days_config_action"
+            sequence="10"/>
+    <menuitem
+            id="menu_user_target_config"
+            name="User Sales Target Configuration"
+            parent="enz_enquiry_analysis.menu_enquiry_config"
+            action="action_sales_target_user_enquiry"
+            sequence="20"/>
+
+</odoo>

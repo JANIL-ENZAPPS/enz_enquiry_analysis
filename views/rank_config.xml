@@ -1,0 +1,38 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="view_enquiry_badge_assignment_config_tree" model="ir.ui.view">
+        <field name="name">enquiry.badge.assignment.config.tree</field>
+        <field name="model">enquiry.badge.assignment.config</field>
+        <field name="arch" type="xml">
+            <tree string="Badge Assignment Configuration">
+                <field name="min_score"/>
+                <field name="max_score"/>
+                <field name="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_enquiry_badge_assignment_config_form" model="ir.ui.view">
+        <field name="name">enquiry.badge.assignment.config.form</field>
+        <field name="model">enquiry.badge.assignment.config</field>
+        <field name="arch" type="xml">
+            <form string="Badge Assignment Configuration">
+                <group>
+                    <field name="min_score"/>
+                    <field name="max_score"/>
+                    <field name="badge"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for the Badge Configuration -->
+    <record id="action_enquiry_badge_assignment_config" model="ir.actions.act_window">
+        <field name="name">Badge Assignment Configuration</field>
+        <field name="res_model">enquiry.badge.assignment.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="user_performance_month_january" model="user.performance.month">
+            <field name="name">January</field>
+        </record>
+        <record id="user_performance_month_february" model="user.performance.month">
+            <field name="name">February</field>
+        </record>
+        <record id="user_performance_month_march" model="user.performance.month">
+            <field name="name">March</field>
+        </record>
+        <record id="user_performance_month_april" model="user.performance.month">
+            <field name="name">April</field>
+        </record>
+        <record id="user_performance_month_may" model="user.performance.month">
+            <field name="name">May</field>
+        </record>
+        <record id="user_performance_month_june" model="user.performance.month">
+            <field name="name">June</field>
+        </record>
+        <record id="user_performance_month_july" model="user.performance.month">
+            <field name="name">July</field>
+        </record>
+        <record id="user_performance_month_august" model="user.performance.month">
+            <field name="name">August</field>
+        </record>
+        <record id="user_performance_month_september" model="user.performance.month">
+            <field name="name">September</field>
+        </record>
+        <record id="user_performance_month_october" model="user.performance.month">
+            <field name="name">October</field>
+        </record>
+        <record id="user_performance_month_november" model="user.performance.month">
+            <field name="name">November</field>
+        </record>
+        <record id="user_performance_month_december" model="user.performance.month">
+            <field name="name">December</field>
+        </record>
+    </data>
+</odoo>

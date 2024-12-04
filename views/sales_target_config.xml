@@ -1,0 +1,33 @@
+<odoo>
+
+<record id="view_sales_target_user_enquiry_tree" model="ir.ui.view">
+    <field name="name">sales.target.user.enquiry.tree</field>
+    <field name="model">sales.target.user.enquiry</field>
+    <field name="arch" type="xml">
+        <tree editable="bottom">
+            <field name="user_id"/>
+            <field name="sales_target"/>
+            <field name="type"/>
+            <field name="month_period" attrs="{'readonly': [('is_month_readonly', '=', True)]}"/>
+            <field name="quarter" attrs="{'readonly': [('is_quarter_readonly', '=', True)]}"/>
+            <field name="is_month_readonly" invisible="1"/>
+            <field name="is_quarter_readonly" invisible="1"/>
+            <field name="salesperson_ids" invisible="1"/>
+        </tree>
+    </field>
+</record>
+
+
+    <!-- Actions for Sales Target per Salesperson -->
+    <record id="action_sales_target_user_enquiry" model="ir.actions.act_window">
+        <field name="name">Sales Target per User</field>
+        <field name="res_model">sales.target.user.enquiry</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p>Create and manage sales targets for each salesperson.</p>
+        </field>
+    </record>
+
+    <!-- Menu Item for Sales Target per Employee -->
+
+</odoo>

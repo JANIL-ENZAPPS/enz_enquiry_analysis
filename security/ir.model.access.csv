@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_enquiry_performance_wizard,access.enquiry.performance.wizard,model_enquiry_performance_wizard,,1,1,1,1
+access_enquiry_performance_analysis,access.enquiry.performance.analysis,model_enquiry_performance_analysis,,1,1,1,1
+access_enquiry_badge_assignment_config,access.enquiry.badge.assignment.config,model_enquiry_badge_assignment_config,,1,1,1,1
+access_enquiry_range_config,access.enquiry.range.config,model_enquiry_range_config,,1,1,1,1
+access_bid_closing_days_config,access.bid.closing.days.config,model_bid_closing_days_config,,1,1,1,1
+access_user_performance_month,access.user.performance.month,model_user_performance_month,,1,1,1,1
+access_user_performance,access.user.performance,model_user_performance,,1,1,1,1
+access_user_performance_wizard,access.user.performance.wizard,model_user_performance_wizard,,1,1,1,1
+access_user_performance_record_line,access.user.performance.record.line,model_user_performance_record_line,,1,1,1,1
+access_user_rankings,access.user.rankings,model_user_rankings,,1,1,1,1
+access_sales_target_user_enquiry,access.sales.target.user.enquiry,model_sales_target_user_enquiry,,1,1,1,1

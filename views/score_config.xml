@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <!-- Score Range Configuration Tree View -->
+<record id="view_enquiry_range_config_tree" model="ir.ui.view">
+    <field name="name">enquiry.range.config.tree</field>
+    <field name="model">enquiry.range.config</field>
+    <field name="arch" type="xml">
+        <tree editable="bottom">
+
+            <field name="min_percentage" />
+            <field name="max_percentage"/>
+            <field name="points"/>
+
+        </tree>
+    </field>
+</record>
+
+<!-- Score Range Configuration Form View -->
+<record id="view_enquiry_range_config_form" model="ir.ui.view">
+    <field name="name">enquiry.range.config.form</field>
+    <field name="model">enquiry.range.config</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+
+                <group>
+                    <group>
+
+                        <field name="min_percentage"/>
+                        <field name="max_percentage"/>
+                        <field name="points"/>
+                    </group>
+                    <group>
+
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+<!-- Action -->
+<record id="action_enquiry_range_config" model="ir.actions.act_window">
+    <field name="name">Score Range Configuration</field>
+    <field name="res_model">enquiry.range.config</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create your first score range configuration!
+        </p>
+        <p>
+            Define score ranges and points for different performance metrics.
+        </p>
+    </field>
+</record>
+
+    </data>
+</odoo>

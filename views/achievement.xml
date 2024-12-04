@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Performance Wizard Form View -->
+    <record id="view_user_performance_wizard_form" model="ir.ui.view">
+        <field name="name">user.performance.wizard.form</field>
+        <field name="model">user.performance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rate Performance">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="month_ids" widget="many2many_tags" readonly="1"/>
+                        <field name="old_achievement_level" readonly="1" attrs="{'invisible': [('has_achievement', '=', False)]}"/>
+                        <field name="achievement_level"/>
+                        <field name="user_id" invisible="1"/>
+
+                        <field name="has_achievement" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_submit"
+                            string="Submit"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible': [('has_achievement', '=', True)]}"/>
+                    <button name="action_reassign"
+                            string="Re-Assign Achievement"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible': [('has_achievement', '=', False)]}"/>
+                    <button special="cancel"
+                            string="Cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_user_performance_wizard" model="ir.actions.act_window">
+        <field name="name">Rate User Performance</field>
+        <field name="res_model">user.performance.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
